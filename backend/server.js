@@ -3,77 +3,67 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
-const axios = require('axios');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const axios = require('axios'); // We will use axios to talk to Ollama
 
-// --- SETUP ---
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+// --- HELPER FUNCTION TO TALK TO OLLAMA ---
+async function getOllamaResponse(system_prompt, user_prompt) {
+    const ollamaApiUrl = 'http://localhost:11434/api/chat';
+    const body = {
+        model: "llama3", // The model we downloaded
+        messages: [
+            {
+                role: "system",
+                content: system_prompt,
+            },
+            {
+                role: "user",
+                content: user_prompt,
+            },
+        ],
+        format: "json", // Ask Ollama to guarantee the output is JSON
+        stream: false,
+    };
 
-// --- GEMINI API ENDPOINT ---
-// Make sure you have the express.json() middleware at the top of your server file
-// app.use(express.json());
+    const response = await axios.post(ollamaApiUrl, body);
+    // The actual JSON string is inside a nested property in Ollama's response
+    return response.data.message.content;
+}
 
 
+// --- ENDPOINT 1: GENERATE SCENE FROM PROMPT ---
 app.post('/api/generate', async (req, res) => {
     try {
         const { prompt } = req.body;
-        const metaPrompt = `
-            You are an expert interior designer AI for an application called Aura Architect.
-            Your task is to take a user's prompt and convert it into a structured JSON object.
-            The JSON object must follow this structure: { "items": [ { "name": "model_category_name", "qualifiers": ["adjective1", "adjective2"], "placement": "A short placement instruction from the list below" } ] }
-            - "name" must be a simple category from this list: chair, sofa, table, lamp, rug, plant, room_base, tv, painting, ceiling_fan, door, window.
-            - "qualifiers" is a list of descriptive words.
-            - "placement" MUST be one of the following simple strings: "center", "back-wall", "left-wall", "right-wall", "front-wall", "back-left-corner", "back-right-corner". If the user asks for a relative position like "in front of the sofa", choose the most logical position from the list.
-            User Prompt: "${prompt}"
-            Generate the JSON object.
-        `;
-
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-        const result = await model.generateContent(metaPrompt);
-        const response = await result.response;
-        let text = response.text();
-
-        const startIndex = text.indexOf('{');
-        const endIndex = text.lastIndexOf('}') + 1;
-        const jsonString = text.substring(startIndex, endIndex);
+        const systemPrompt = `You are an expert interior designer AI. Your task is to take a user's prompt and convert it into a structured JSON object. The JSON must have a key "items" which is an array of objects. Each object must have "name" (a category like chair, sofa, table), "qualifiers" (an array of adjectives), and "placement" (a string like "center" or "back-wall"). Respond with ONLY the JSON object and no other text.`;
         
-        console.log("Cleaned AI Response:", jsonString);
-        res.json(JSON.parse(jsonString));
+        const jsonResponse = await getOllamaResponse(systemPrompt, prompt);
 
+        console.log("AI Response for /generate:", jsonResponse);
+        res.json(JSON.parse(jsonResponse));
     } catch (error) {
-        console.error("Error generating or parsing content:", error);
+        console.error("Error in /api/generate:", error);
         res.status(500).json({ error: "Failed to generate content" });
     }
 });
 
-// --- MESHY API ENDPOINT ---
-app.post('/api/generate-new-model', async (req, res) => {
-    console.log("Received request to generate new model...");
+// --- ENDPOINT 2: ANALYZE AURA FOR LIGHTING ---
+app.post('/api/analyze-aura', async (req, res) => {
     try {
-        const { prompt } = req.body;
-        if (!prompt) {
-            return res.status(400).json({ error: "Prompt is required" });
-        }
-        const meshyApiUrl = 'https://api.meshy.ai/v2/text-to-3d';
-        const headers = {
-            'Authorization': `Bearer ${process.env.MESHY_API_KEY}`,
-            'Content-Type': 'application/json'
-        };
-        const body = {
-            object_prompt: prompt,
-            style: "realistic"
-        };
-        const response = await axios.post(meshyApiUrl, body, { headers });
-        const taskId = response.data.result;
-        console.log("Successfully started generation task with ID:", taskId);
-        res.json({ taskId: taskId });
+        const { blueprint } = req.body;
+        const systemPrompt = `You are a lighting design expert AI. Your task is to analyze a room layout and predict the coordinates of bright spots and shadows. Return a JSON object with two keys: "bright_areas" and "shadow_areas". Each key should be an array of [x, y, z] coordinates. Keep the y-coordinate at 0.1. Respond with ONLY the JSON object and no other text.`;
+        const userPrompt = `Here is the room blueprint: ${JSON.stringify(blueprint, null, 2)}`;
+
+        const jsonResponse = await getOllamaResponse(systemPrompt, userPrompt);
+        
+        console.log("Aura Analysis Response:", jsonResponse);
+        res.json(JSON.parse(jsonResponse));
     } catch (error) {
-        console.error("Error with Meshy API:", error.response ? error.response.data : error.message);
-        res.status(500).json({ error: "Failed to start model generation" });
+        console.error("Error during Aura Analysis:", error);
+        res.status(500).json({ error: "Failed to analyze aura" });
     }
 });
 

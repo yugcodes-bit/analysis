@@ -794,3 +794,176 @@
   cursor: pointer;
   color: #ddd;
 }
+/* Styles for the Aura Button */
+/* Add to create.css */
+/* Professional Aura Analysis Toggle */
+.aura-button {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+}
+
+.aura-button.active {
+    background: linear-gradient(45deg, #f093fb, #f5576c);
+    box-shadow: 0 4px 20px rgba(245, 87, 108, 0.4);
+}
+
+.aura-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.aura-button.active:hover {
+    box-shadow: 0 6px 25px rgba(245, 87, 108, 0.5);
+}
+/* Aura Analysis Legend */
+/* Aura Analysis Legend */
+.aura-legend {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 12px;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  max-width: 200px;
+}
+
+.aura-legend h4 {
+  margin: 0 0 10px 0;
+  color: #fff;
+  font-size: 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 5px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.color-box {
+  width: 16px;
+  height: 16px;
+  margin-right: 8px;
+  border-radius: 3px;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+/* Aura Button Styles */
+.aura-button {
+  background: linear-gradient(45deg, #667eea, #764ba2);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.aura-button.active {
+  background: linear-gradient(45deg, #f093fb, #f5576c);
+  box-shadow: 0 4px 20px rgba(245, 87, 108, 0.4);
+}
+
+.aura-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.aura-button.active:hover {
+  box-shadow: 0 6px 25px rgba(245, 87, 108, 0.5);
+}
+/* Enhanced Aura Analysis Legend */
+.aura-legend {
+  position: absolute;
+  top: 80px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 20px;
+  border-radius: 12px;
+  font-size: 12px;
+  z-index: 1000;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 250px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+.aura-legend h4 {
+  margin: 0 0 15px 0;
+  color: #fff;
+  font-size: 16px;
+  border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+  padding-bottom: 8px;
+  text-align: center;
+}
+
+.legend-section {
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.legend-section h5 {
+  margin: 0 0 8px 0;
+  color: #ccc;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 6px;
+  padding: 2px 0;
+}
+
+.color-box {
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+  border-radius: 4px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.analysis-tips {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 12px;
+  border-radius: 8px;
+  margin-top: 10px;
+  border-left: 3px solid #4ecdc4;
+}
+
+.analysis-tips p {
+  margin: 5px 0;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.analysis-tips strong {
+  color: #4ecdc4;
+}
