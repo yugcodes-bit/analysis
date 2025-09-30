@@ -6,6 +6,7 @@ import background_video from "../assets/landing_page_vid.mp4";
 import { Scene } from '../Scene.jsx'; // This should work now with named export 
 import { supabase } from "../supabaseClient";
 import { LibraryPanel } from "../components/LibraryPanel";
+import EmotionDetector from '../components/EmotionDetector';
 
 const sentences = [
   "Imagine your dream space...",
@@ -273,6 +274,9 @@ const Create = () => {
               >
                 Library
               </h3>
+
+
+     
             </div>
           </ul>
         </div>
@@ -327,6 +331,10 @@ const Create = () => {
                     </button>
                   )}
                 </div>
+                <EmotionDetector 
+    onEmotionDetected={(emotion) => console.log('Detected emotion:', emotion)}
+  />
+
 
                 {selectedObject?.userData?.isLamp && (
                   <div className="light-controls-ui">
